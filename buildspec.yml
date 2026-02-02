@@ -6,8 +6,8 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Pulling base image from ECR Public Gallery to avoid rate limits...
-      - docker pull public.ecr.aws/debian/debian:stable-slim
-      - docker tag public.ecr.aws/debian/debian:stable-slim debian:stable-slim
+      - docker pull public.ecr.aws/apache/apache:latest
+      - docker tag public.ecr.aws/apache/apache:latest apache:latest
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - TIMESTAMP=$(date +%Y%m%d%H%M%S)
