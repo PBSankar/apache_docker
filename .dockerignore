@@ -1,9 +1,0 @@
-.git
-.github
-ssl/*
-!ssl/.keep
-node_modules
-*.log
-.DS_Store
-.vscode
-.idea
