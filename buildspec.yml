@@ -16,7 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -f cicd/Dockerfile -t apache:$IMAGE_TAG .
+      - docker build -f Dockerfile -t apache:$IMAGE_TAG .
       - docker tag apache:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:

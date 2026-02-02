@@ -1,4 +1,4 @@
-FROM public.ecr.aws/debian/debian:stable-slim
+FROM public.ecr.aws/debian/debian:12-slim
 
 # Install Apache
 RUN apt-get update && \
