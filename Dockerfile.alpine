@@ -1,0 +1,41 @@
+# syntax=docker/dockerfile:1.7
+FROM alpine:3.20
+
+ARG APACHE_USER=apache
+ARG APACHE_GROUP=apache
+ARG APACHE_UID=10001
+ARG APACHE_GID=10001
+ENV APACHE_DOCUMENT_ROOT=/var/www/localhost/htdocs
+
+RUN set -eux; \
+    addgroup -g ${APACHE_GID} ${APACHE_GROUP}; \
+    adduser -D -H -s /sbin/nologin -u ${APACHE_UID} -G ${APACHE_GROUP} ${APACHE_USER}; \
+    apk add --no-cache \
+        apache2 \
+        apache2-utils \
+        apache2-ssl \
+        ca-certificates \
+        curl \
+        dumb-init \
+        openssl; \
+    mkdir -p /run/apache2 ${APACHE_DOCUMENT_ROOT}; \
+    chown -R ${APACHE_USER}:${APACHE_GROUP} /run/apache2 ${APACHE_DOCUMENT_ROOT}
+
+# Copy config and content
+COPY conf/httpd.conf /etc/apache2/httpd.conf
+COPY conf/mpm_event.conf /etc/apache2/conf.d/mpm_event.conf
+COPY conf/security.conf /etc/apache2/conf.d/security.conf
+COPY conf/extras/headers_hsts.conf /etc/apache2/conf.d/headers_hsts.conf
+COPY conf/sites/000-default.conf /etc/apache2/conf.d/000-default.conf
+COPY conf/sites/001-ssl.conf /etc/apache2/conf.d/001-ssl.conf
+COPY html/ ${APACHE_DOCUMENT_ROOT}/
+
+COPY --chmod=0755 healthcheck.sh /usr/local/bin/healthcheck.sh
+COPY --chmod=0755 entrypoint.sh /usr/local/bin/entrypoint.sh
+
+EXPOSE 80 443
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD ["/usr/local/bin/healthcheck.sh"]
+
+USER ${APACHE_USER}:${APACHE_GROUP}
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["/usr/local/bin/entrypoint.sh"]

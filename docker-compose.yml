@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile.debian
+      args:
+        APACHE_UID: 10001
+        APACHE_GID: 10001
+    image: your-registry/apache:dev
+    ports:
+      - "8080:80"
+      - "8443:443"
+    environment:
+      ENABLE_SSL: "false"   # set "true" when certificates are present
+    volumes:
+      - ./html:/var/www/html:ro
+      - ./conf:/etc/apache2:ro
+      - ./ssl:/etc/apache2/ssl:ro
