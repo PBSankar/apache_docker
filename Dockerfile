@@ -1,3 +1,3 @@
-FROM httpd:2.4-alpine
-COPY index.html /usr/local/apache2/htdocs/
+FROM tomcat:9.0-alpine
+COPY index.jsp /usr/local/tomcat/webapps/ROOT/
 EXPOSE 80
