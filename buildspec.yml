@@ -8,20 +8,20 @@ phases:
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - TIMESTAMP=$(date +%Y%m%d%H%M%S)
-      - IMAGE_TAG=tomcat-v1.0-${TIMESTAMP}
+      - IMAGE_TAG=nginx-v1.0-${TIMESTAMP}
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -f Dockerfile -t tomcat:$IMAGE_TAG .
-      - docker tag tomcat:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -f Dockerfile -t nginx:$IMAGE_TAG .
+      - docker tag nginx:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"tomcat","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"nginx","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:

@@ -1,3 +1,3 @@
-FROM tomcat:9.0-alpine
-COPY index.jsp /usr/local/tomcat/webapps/ROOT/
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/
 EXPOSE 80
